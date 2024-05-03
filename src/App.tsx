@@ -87,7 +87,7 @@ function App() {
         return passLocation && passJobRole && passMinPay && passMinExp;
       });
   
-      setJobs(filteredJobs);
+      setJobs((prevJobs) => [...prevJobs, ...filteredJobs]);
       setLoading(false);
     } catch (error) {
       console.error(error);
