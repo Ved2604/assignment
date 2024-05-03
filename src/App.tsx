@@ -1,11 +1,11 @@
-import { useEffect, useState,useRef } from 'react'; 
+import { useState, useEffect, useRef } from 'react';
+import './App.css';
+import { CircularProgress } from '@mui/material';
 import JobCard from './JobCard';
-import { CircularProgress } from '@mui/material';  
 import DropdownMenu from './Locationmenu';
 import JobRoleDropdown from './Jobrolemenu';
 import Paymenudropdown from './Paymenu';
-import MinExpDropdown from './Expmenu';
-
+import MinExpDropdown from './Expmenu'; 
 
 interface Job {
   jdUid: string;
@@ -19,18 +19,16 @@ interface Job {
   jdLink:string;
 }
 
-
 function App() {
-  const [jobs,setJobs]=useState<Job[]>([]) 
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const loader = useRef<HTMLDivElement>(null);  
+  const loader = useRef<HTMLDivElement>(null); 
   const [selectedLocation, setSelectedLocation] = useState<string>(''); 
   const [selectedJobRole, setSelectedJobRole] = useState<string>("");
   const [selectedMinPay, setSelectedMinPay] = useState<number>(0);
-  const [selectedMinExp, setSelectedMinExp] = useState<number>(0);
-
-
+  const [selectedMinExp, setSelectedMinExp] = useState<number>(0); // State for selected minimum experience
+  
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
@@ -45,19 +43,18 @@ function App() {
     return () => {
       observer.disconnect();
     };
-  }, []); 
+  }, []);
 
   useEffect(() => {
     fetchJobs();
     
-  }, [page]); 
+  }, [page]);
 
-  const handleObserver = (entries: IntersectionObserverEntry[]) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  }; 
+  useEffect(() => {
+    setJobs([]); // Clear existing jobs
+    setPage(1); // Reset page number
+    
+  }, [selectedLocation, selectedJobRole, selectedMinPay, selectedMinExp]);
 
   const fetchJobs = async () => {
     setLoading(true);
@@ -79,11 +76,26 @@ function App() {
       console.log(result)
   
       // Add a 2-second delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       
+      let newJobs: Job[] = [];
+      if (selectedLocation !== '') {
+        newJobs = result.jdList.filter((job: Job) => job.location === selectedLocation);
+      } 
+      else if (selectedJobRole !== '') {
+        newJobs = result.jdList.filter((job: Job) => job.jobRole === selectedJobRole);
+      }
+      else if (selectedMinPay !== 0) {
+        newJobs = result.jdList.filter((job: Job) => job.minJdSalary >= selectedMinPay);
+      }
+      else if (selectedMinExp !== 0) {
+        newJobs = result.jdList.filter((job: Job) => job.minExp >= selectedMinExp);
+      }
+      else {
+        newJobs = result.jdList;
+      }
       
-      
-      setJobs((prevJobs) => [...prevJobs, ...result.jdList]);
+      setJobs((prevJobs) => [...prevJobs, ...newJobs]);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -91,10 +103,14 @@ function App() {
     }
   };
   
-
- 
-
-  return (
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+  
+  return ( 
     <> 
     <div className="bg-white shadow-md fixed top-0 left-0 w-full z-10 p-4 flex flex-wrap justify-between ">
         <DropdownMenu setSelectedLocation={setSelectedLocation} selectedLocation={selectedLocation} />
@@ -113,8 +129,7 @@ function App() {
         </div>
     </div>
     </>
-  )
+  );
 }
 
 export default App;
-
