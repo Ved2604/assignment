@@ -2,6 +2,9 @@ import { useEffect, useState,useRef } from 'react';
 import JobCard from './JobCard';
 import { CircularProgress } from '@mui/material';  
 import DropdownMenu from './Locationmenu';
+import JobRoleDropdown from './Jobrolemenu';
+import Paymenudropdown from './Paymenu';
+import MinExpDropdown from './Expmenu';
 
 
 interface Job {
@@ -23,6 +26,10 @@ function App() {
   const [page, setPage] = useState(1);
   const loader = useRef<HTMLDivElement>(null);  
   const [selectedLocation, setSelectedLocation] = useState<string>(''); 
+  const [selectedJobRole, setSelectedJobRole] = useState<string>("");
+  const [selectedMinPay, setSelectedMinPay] = useState<number>(0);
+  const [selectedMinExp, setSelectedMinExp] = useState<number>(0);
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
@@ -89,9 +96,12 @@ function App() {
 
   return (
     <> 
-    <div>
-       <DropdownMenu setSelectedLocation={setSelectedLocation} selectedLocation={selectedLocation} />
-    </div>
+    <div className="bg-white shadow-md fixed top-0 left-0 w-full z-10 p-4 flex flex-wrap justify-between ">
+        <DropdownMenu setSelectedLocation={setSelectedLocation} selectedLocation={selectedLocation} />
+        <JobRoleDropdown selectedJobRole={selectedJobRole} setSelectedJobRole={setSelectedJobRole} />
+        <Paymenudropdown selectedMinPay={selectedMinPay} setSelectedMinPay={setSelectedMinPay} />
+        <MinExpDropdown selectedMinExp={selectedMinExp} setSelectedMinExp={setSelectedMinExp} />
+      </div>
     <div className="container mx-auto px-4 mt-40 top-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-5">
             {jobs.map((job) => (
@@ -107,3 +117,4 @@ function App() {
 }
 
 export default App;
+
