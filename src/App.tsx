@@ -1,6 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react'; 
+import JobCard from './JobCard';
+
+interface Job {
+  jdUid: string;
+  jobRole: string;
+  location: string;
+  jobDetailsFromCompany: string;
+  minJdSalary: number;
+  maxJdSalary: number;
+  salaryCurrencyCode: string;
+  minExp: number;
+  jdLink:string;
+}
+
 
 function App() {
+  const [jobs,setJobs]=useState<Job[]>([])
+
   useEffect(() => {
     const fetchData = async () => {
       const myHeaders = new Headers();
@@ -21,6 +37,7 @@ function App() {
         const response = await fetch('https://api.weekday.technology/adhoc/getSampleJdJSON', requestOptions);
         const result = await response.json();
         console.log(result);
+        setJobs(result.jdList)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -29,7 +46,12 @@ function App() {
     fetchData();
   }, []);
 
-  return <div>Setting up application</div>;
+  return <div>
+   {jobs.map((job) => (
+                <JobCard key={job.jdUid} job={job} />
+            ))}
+
+  </div>;
 }
 
 export default App;
