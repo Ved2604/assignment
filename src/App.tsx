@@ -112,9 +112,10 @@ function App() {
     fetchData();
   }, []);
 
-  return <div>
-    <div className="">
-        <div className="">
+  return (
+    <>
+    <div className="container mx-auto px-4 mt-40 top-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-5">
             {jobs.map((job) => (
                 <JobCard key={job.jdUid} job={job} />
             ))}
@@ -123,7 +124,8 @@ function App() {
             {loading && <CircularProgress />}
         </div>
     </div>
-  </div>;
+    </>
+  )
 }
 
 export default App;
