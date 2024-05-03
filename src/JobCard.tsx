@@ -10,10 +10,10 @@ interface JobCardProps {
     jobRole: string;
     location: string;
     jobDetailsFromCompany: string;
-    minJdSalary: number;
-    maxJdSalary: number;
+    minJdSalary: number | null;
+    maxJdSalary: number | null;
     salaryCurrencyCode: string;
-    minExp: number;
+    minExp: number | null;
     jdLink:string;
   };
 }
@@ -40,14 +40,25 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             {expanded ? ' Read less' : ' Read more'}
           </span>
         </Typography>
-        <Typography variant="body2" color="textSecondary" className="mt-2">
-          {`${job.salaryCurrencyCode} ${job.minJdSalary} - ${job.salaryCurrencyCode} ${job.maxJdSalary}`}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" className="mt-2">
-          {`${job.minExp} years of experience required`}
-        </Typography> 
-        <Button href={job.jdLink} variant="contained" color="primary" size="small" style={{ marginTop: '10px' }} > Apply Here </Button>
-
+        {job.minJdSalary !== null && (
+          <Typography variant="body2" color="textSecondary" className="mt-2">
+            {`Min. Salary: ${job.salaryCurrencyCode} ${job.minJdSalary}`}           
+          </Typography>
+          
+        )}
+        {job.maxJdSalary!==null&& (
+           <Typography variant="body2" color="textSecondary" className="mt-2">
+           {`Max Salary: ${job.salaryCurrencyCode} ${job.maxJdSalary}`}           
+         </Typography>
+        )}
+        {job.minExp !== null && (
+          <Typography variant="body2" color="textSecondary" className="mt-2">
+            {`${job.minExp} years of experience required`}
+          </Typography>
+        )}
+        <Button href={job.jdLink} variant="contained" color="primary" size="small" style={{ marginTop: '10px' }}>
+          Apply Here
+        </Button>
       </CardContent>
     </Card>
   );
