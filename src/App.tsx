@@ -111,6 +111,7 @@ function App() {
         <MinExpDropdown selectedMinExp={selectedMinExp} setSelectedMinExp={setSelectedMinExp} />
       </div>
     <div className="container mx-auto px-4 mt-40 top-5">
+       {jobs.length === 0 && !loading && <p className="text-center">No jobs match found with required filters.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-5">
             {jobs.map((job) => (
                 <JobCard key={job.jdUid} job={job} />
