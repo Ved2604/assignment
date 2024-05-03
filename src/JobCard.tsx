@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
+import { Card,CardContent,Typography,Button } from '@mui/material';
 
 interface JobCardProps {
   job: {
@@ -23,19 +24,30 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
   return (
     <div>
-      <h2>{job.jobRole}</h2>
-      <p>{job.location}</p>
-      <p>
-        {expanded ? job.jobDetailsFromCompany : `${job.jobDetailsFromCompany.slice(0, 40)}...`}
-        <span onClick={toggleExpand} style={{ cursor: 'pointer', color: 'blue' }}>
-          {expanded ? ' Read less' : ' Read more'}
-        </span>
-      </p>
-      <p>
-        {`${job.salaryCurrencyCode} ${job.minJdSalary} - ${job.salaryCurrencyCode} ${job.maxJdSalary}`}
-      </p>
-      <p>{`${job.minExp} years of experience required`}</p>
-      <a href={job.jdLink}>Apply Here</a>
+      <Card>
+  <CardContent>
+    <Typography variant="h5" component="h2">
+      {job.jobRole}
+    </Typography>
+    <Typography color="textSecondary">
+      {job.location}
+    </Typography>
+    <Typography variant="body2" component="p">
+      {expanded ? job.jobDetailsFromCompany : `${job.jobDetailsFromCompany.slice(0, 40)}...`}
+      <span onClick={toggleExpand} style={{ cursor: 'pointer', color: 'blue' }}>
+        {expanded ? ' Read less' : ' Read more'}
+      </span>
+    </Typography>
+    <Typography variant="body2" color="textSecondary">
+      {`${job.salaryCurrencyCode} ${job.minJdSalary} - ${job.salaryCurrencyCode} ${job.maxJdSalary}`}
+    </Typography>
+    <Typography variant="body2" color="textSecondary">
+      {`${job.minExp} years of experience required`}
+    </Typography> 
+    <Button href={job.jdLink} variant="contained" color="primary" size="small" style={{ marginTop: '10px' }}> Apply Here </Button>
+  </CardContent>
+</Card>
+
     </div>
   );
 };
