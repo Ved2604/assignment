@@ -1,6 +1,7 @@
 import { useEffect, useState,useRef } from 'react'; 
 import JobCard from './JobCard';
 import { CircularProgress } from '@mui/material';  
+import DropdownMenu from './Locationmenu';
 
 
 interface Job {
@@ -21,6 +22,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const loader = useRef<HTMLDivElement>(null);  
+  const [selectedLocation, setSelectedLocation] = useState<string>(''); 
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
@@ -70,7 +72,7 @@ function App() {
       console.log(result)
   
       // Add a 2-second delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       
       
       
@@ -83,37 +85,13 @@ function App() {
   };
   
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'application/json');
-
-      const body = JSON.stringify({
-        limit: 10,
-        offset: 0
-      });
-
-      const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body
-      };
-
-      try {
-        const response = await fetch('https://api.weekday.technology/adhoc/getSampleJdJSON', requestOptions);
-        const result = await response.json();
-        console.log(result);
-        setJobs(result.jdList)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+ 
 
   return (
-    <>
+    <> 
+    <div>
+       <DropdownMenu setSelectedLocation={setSelectedLocation} selectedLocation={selectedLocation} />
+    </div>
     <div className="container mx-auto px-4 mt-40 top-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mb-5">
             {jobs.map((job) => (
