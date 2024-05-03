@@ -73,29 +73,21 @@ function App() {
     try {
       const response = await fetch('https://api.weekday.technology/adhoc/getSampleJdJSON', requestOptions);
       const result = await response.json();
-      console.log(result)
+      console.log(result);
   
       // Add a 2-second delay
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
-      let newJobs: Job[] = [];
-      if (selectedLocation !== '') {
-        newJobs = result.jdList.filter((job: Job) => job.location === selectedLocation);
-      } 
-      else if (selectedJobRole !== '') {
-        newJobs = result.jdList.filter((job: Job) => job.jobRole === selectedJobRole);
-      }
-      else if (selectedMinPay !== 0) {
-        newJobs = result.jdList.filter((job: Job) => job.minJdSalary >= selectedMinPay);
-      }
-      else if (selectedMinExp !== 0) {
-        newJobs = result.jdList.filter((job: Job) => job.minExp >= selectedMinExp);
-      }
-      else {
-        newJobs = result.jdList;
-      }
-      
-      setJobs((prevJobs) => [...prevJobs, ...newJobs]);
+  
+      let filteredJobs = result.jdList.filter((job: Job) => {
+        let passLocation = selectedLocation ? job.location === selectedLocation : true;
+        let passJobRole = selectedJobRole ? job.jobRole === selectedJobRole : true;
+        let passMinPay = selectedMinPay ? job.minJdSalary >= selectedMinPay : true;
+        let passMinExp = selectedMinExp ? job.minExp >= selectedMinExp : true;
+  
+        return passLocation && passJobRole && passMinPay && passMinExp;
+      });
+  
+      setJobs(filteredJobs);
       setLoading(false);
     } catch (error) {
       console.error(error);
